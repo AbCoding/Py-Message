@@ -1,0 +1,149 @@
+{
+  "python": "3.10.11",
+  "platform": "macOS-14.7.4-arm64-arm-64bit",
+  "chats": 100,
+  "charts": "none",
+  "cases": [
+    {
+      "messages": 10000,
+      "source_bytes": 1413120,
+      "first": {
+        "wall_seconds": 1.7196,
+        "stage_seconds": {
+          "analysis_and_exports": 0.618413,
+          "decode": 0.503282,
+          "media": 0.006476,
+          "reconcile": 0.347135,
+          "relationships": 0.073304,
+          "render": 1e-06,
+          "report_index": 0.009773,
+          "snapshot": 0.006594
+        },
+        "sync": {
+          "absent": 0,
+          "added": 10000,
+          "changed": 0,
+          "decode_requested": 0,
+          "decoded": 10000,
+          "raw_records_changed": 20301,
+          "reconciliation": {
+            "archived_present_rows": 10000,
+            "source_message_rows": 10000
+          },
+          "snapshot_unchanged": false,
+          "source_id": "c4efc694bc22a32c34da81ac",
+          "unchanged": 0,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 0,
+          "analyzed": 100,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 10000
+      },
+      "unchanged": {
+        "wall_seconds": 0.1191,
+        "stage_seconds": {
+          "analysis_and_exports": 0.025186,
+          "render": 2e-06,
+          "report_index": 0.007581,
+          "snapshot": 0.006282
+        },
+        "sync": {
+          "absent": 0,
+          "added": 0,
+          "changed": 0,
+          "decoded": 0,
+          "raw_records_changed": 0,
+          "snapshot_unchanged": true,
+          "source_id": "c4efc694bc22a32c34da81ac",
+          "unchanged": 10000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 100,
+          "analyzed": 0,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 10000
+      },
+      "append": {
+        "wall_seconds": 0.6321,
+        "stage_seconds": {
+          "analysis_and_exports": 0.163497,
+          "decode": 0.000696,
+          "media": 0.006302,
+          "reconcile": 0.291294,
+          "relationships": 0.06978,
+          "render": 2e-06,
+          "report_index": 0.008067,
+          "snapshot": 0.006292
+        },
+        "sync": {
+          "absent": 0,
+          "added": 1,
+          "changed": 0,
+          "decode_requested": 0,
+          "decoded": 1,
+          "raw_records_changed": 2,
+          "reconciliation": {
+            "archived_present_rows": 10001,
+            "source_message_rows": 10001
+          },
+          "snapshot_unchanged": false,
+          "source_id": "c4efc694bc22a32c34da81ac",
+          "unchanged": 10000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 99,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 10001
+      },
+      "old_update": {
+        "wall_seconds": 0.6668,
+        "stage_seconds": {
+          "analysis_and_exports": 0.164622,
+          "decode": 0.000776,
+          "media": 0.006338,
+          "reconcile": 0.31883,
+          "relationships": 0.071693,
+          "render": 2e-06,
+          "report_index": 0.007882,
+          "snapshot": 0.006239
+        },
+        "sync": {
+          "absent": 0,
+          "added": 0,
+          "changed": 1,
+          "decode_requested": 0,
+          "decoded": 1,
+          "raw_records_changed": 1,
+          "reconciliation": {
+            "archived_present_rows": 10001,
+            "source_message_rows": 10001
+          },
+          "snapshot_unchanged": false,
+          "source_id": "c4efc694bc22a32c34da81ac",
+          "unchanged": 10000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 99,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 10001
+      },
+      "output_bytes": 25367545,
+      "child_peak_rss_mb": 37.45
+    }
+  ]
+}

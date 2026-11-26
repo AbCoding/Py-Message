@@ -1,0 +1,10 @@
+{
+  "arm64": {
+    "file": "pymessage-decoder-arm64",
+    "sha256": "4164bc6dd51372d0a1efc58dea2e1fe885627256cc1412e702578b2448e9154c"
+  },
+  "x86_64": {
+    "file": "pymessage-decoder-x86_64",
+    "sha256": "181e6fed863063b59db3f8893abf7c53362edba9e173500449ac528fcd043de9"
+  }
+}

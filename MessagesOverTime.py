@@ -1,148 +1,97 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime
+from pathlib import Path
 
-import numpy as np
+
+GROUPS = {"time_of_day": 0, "day_of_week": 1, "day": 2, "week": 3, "month": 4}
+DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+
 def ExtractDates(filename):
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(filename + ".csv")
+    df = pd.read_csv(str(filename) + ".csv", keep_default_na=False)
+    return pd.DataFrame({"datetime": pd.to_datetime(df['Timestamp']), "Sender": df['Sender']})
 
-    # Convert the 'Timestamp' column to datetime objects
-    date_strings = df['Timestamp'].tolist()
-    dates = [datetime.strptime(date, '%Y-%m-%d %H:%M:%S') for date in date_strings]
-
-    # Create a new DataFrame with the 'datetime' column
-    return_df = pd.DataFrame(dates, columns=['datetime'])
-
-    # Add the 'sender' column from the original DataFrame
-    return_df['Sender'] = df['Sender'].tolist()
-
-    return return_df
 
 def SeparateBySender(df, sender):
-    # Filter the DataFrame to include only rows where 'Sender' matches the provided sender string
-    sender_df = df[df['Sender'] == sender]
+    return df.loc[df['Sender'] == sender, ['datetime']].copy()
 
-    # Return the DataFrame with only the 'datetime' column
-    return sender_df[['datetime']]
 
 def GetUniqueSenders(df):
-    # Get unique senders from the 'Sender' column
-    unique_senders = df['Sender'].unique()
+    return df['Sender'].unique()
 
-    return unique_senders
+
+def SortByTime(df):
+    dates = df['datetime']
+    return [
+        dates.dt.hour.value_counts().reindex(range(24), fill_value=0),
+        dates.dt.dayofweek.value_counts().reindex(range(7), fill_value=0).rename(index=dict(enumerate(DAY_NAMES))),
+        dates.dt.date.value_counts().sort_index(),
+        dates.dt.to_period('W').value_counts().sort_index(),
+        dates.dt.to_period('M').value_counts().sort_index(),
+    ]
+
 
 def GenerateTimeFrames(filename, sender="all"):
     df = ExtractDates(filename)
+    if isinstance(sender, str) and sender != "all":
+        return sender, SortByTime(SeparateBySender(df, sender))
+    senders = GetUniqueSenders(df) if sender == "all" else sender
+    return [(value, SortByTime(SeparateBySender(df, value))) for value in senders]
 
-    if isinstance(sender, (list,tuple,set)):
-        timeFrames = []
-        for s in sender:
-            timeFrames.append((s, SortByTime(SeparateBySender(df, s))))
-        return timeFrames
-    elif isinstance(sender, str):
-        if sender == "all":
-            ListOfSenders = GetUniqueSenders(df)
-            timeFrames = []
-            for s in ListOfSenders:
-                timeFrames.append((s, SortByTime(SeparateBySender(df, s))))
 
-            return timeFrames
-        else:
-            try:
-                return(sender, SortByTime(SeparateBySender(df, sender)))
-            except:
-                raise  Exception("Sender not in DB")
-
+def plot_shared_timeline(data_frames, labels=None, title="", *, output_file=None, show=True):
+    # Align the union of dates before plotting so different senders' bars share
+    # the same positions, even when one sender has gaps in their timeline.
+    labels = labels or ["Messages"]
+    data = pd.concat(data_frames, axis=1).fillna(0).sort_index()
+    data.columns = labels
+    figure, axis = plt.subplots(figsize=(12, 5))
+    if not data.empty:
+        data.plot.bar(ax=axis, width=0.8)
+    axis.set(title=title, xlabel="Time", ylabel="Messages")
+    # Large archives should still produce readable charts.
+    if len(data) > 30:
+        step = max(1, len(data) // 20)
+        ticks = list(range(0, len(data), step))
+        axis.set_xticks(ticks, [str(data.index[i]) for i in ticks], rotation=45, ha='right')
     else:
-        raise TypeError("Parameter must be a string or an array (list, tuple, set)")
-
-def SortByTime(df):
-    # By TimeOfDay
-    df['hour'] = df['datetime'].dt.hour
-    time_of_day = df['hour'].value_counts().sort_index()
-
-    # By DayOfWeek
-    df['day'] = df['datetime'].dt.weekday
-    day_names = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
-    df['day_name'] = df['day'].map(day_names)
-    time_of_week = df['day_name'].value_counts().reindex(list(day_names.values())).fillna(0).astype(int)
-
-    # By Day
-    df['date'] = df['datetime'].dt.date
-    by_day = df['date'].value_counts().sort_index()
-
-    # By Week
-    df['week'] = df['datetime'].dt.to_period('W')
-    by_week = df['week'].value_counts().sort_index()
-
-    # By Month
-    df['month'] = df['datetime'].dt.to_period('M')
-    by_month = df['month'].value_counts().sort_index()
-
-    return [time_of_day, time_of_week, by_day, by_week, by_month]
-
-def plot_shared_timeline(data_frames, labels, title=""):
-    plt.figure(figsize=(10, 5))
-    width = 0.1  # Width of each bar
-    positions = range(len(data_frames[0]))  # X-axis positions for the first set of bars
-
-    colors =plt.get_cmap('prism')(np.linspace(0.2, 0.7, len(data_frames))) # Generate different colors for each label
+        plt.setp(axis.get_xticklabels(), rotation=45, ha='right')
+    figure.tight_layout()
+    if output_file:
+        figure.savefig(output_file, dpi=150)
+    if show:
+        plt.show()
+    plt.close(figure)
+    return figure
 
 
-    for i, (df, label) in enumerate(zip(data_frames, labels)):
-        df.plot(kind='bar', width=width, position=i - (len(data_frames) / 2) * width, alpha=0.7, label=label, color=colors[i % len(colors)])
+def PlotType(filename, time_data, GroupBy, labels=None, *, output_file=None, show=True):
+    groups = list(GROUPS) if GroupBy == "all" else [GroupBy]
+    if any(group not in GROUPS for group in groups):
+        raise ValueError(f"Unknown grouping: {GroupBy}")
+    figures = []
+    for group in groups:
+        target = output_file
+        if target and len(groups) > 1:
+            target = Path(target).with_name(f"{Path(target).stem}_{group}{Path(target).suffix}")
+        figures.append(plot_shared_timeline(
+            [data[GROUPS[group]] for data in time_data], labels,
+            f"{Path(filename).name} — messages by {group.replace('_', ' ')}",
+            output_file=target, show=show,
+        ))
+    return figures
 
-    plt.title(title)
-    plt.xlabel('Time')
-    plt.ylabel('Count')
-    plt.legend()
-    plt.xticks(positions, data_frames[0].index, rotation=45)  # Use the index of the first dataframe for x-ticks
-    plt.tight_layout()
-    plt.show()
 
-def PlotType(filename, time_data, GroupBy, labels=None):
-    if GroupBy == "all":
-        plot_shared_timeline([td[0] for td in time_data], labels, filename + " Sorted by Time of Day")
-        plot_shared_timeline([td[1] for td in time_data], labels, filename + " Sorted by Day of Week")
-        plot_shared_timeline([td[2] for td in time_data], labels, filename + " Sorted by Day")
-        plot_shared_timeline([td[3] for td in time_data], labels, filename + " Sorted by Week")
-        plot_shared_timeline([td[4] for td in time_data], labels, filename + " Sorted by Month")
-    elif GroupBy == "time_of_day":
-        plot_shared_timeline([td[0] for td in time_data], labels, filename + " Sorted by Time of Day")
-    elif GroupBy == "day_of_week":
-        plot_shared_timeline([td[1] for td in time_data], labels, filename + " Sorted by Day of Week")
-    elif GroupBy == "day":
-        plot_shared_timeline([td[2] for td in time_data], labels, filename + " Sorted by Day")
-    elif GroupBy == "week":
-        plot_shared_timeline([td[3] for td in time_data], labels, filename + " Sorted by Week")
-    elif GroupBy == "month":
-        plot_shared_timeline([td[4] for td in time_data], labels, filename + " Sorted by Month")
-    else:
-        print("Invalid GroupBy option. Choose from 'time_of_day', 'day_of_week', 'day', 'week', or 'month'.")
-
-def GenerateTimeline(filename, GroupBy="week", SeperateBySender=False, sender="all"):
+def GenerateTimeline(filename, GroupBy="week", SeperateBySender=False, sender="all", *, output_file=None, show=True):
     if SeperateBySender:
-        print(filename)
-        timeFrames = GenerateTimeFrames(filename, sender)
-
-        if isinstance(sender, str):
-            if sender != "all":
-                title = filename + " Sender: " + timeFrames[0]
-                PlotType(title, [timeFrames[1]], GroupBy=GroupBy, labels=[timeFrames[0]])
-            else:
-                labels = [time_data[0] for time_data in timeFrames]
-                time_data = [time_data[1] for time_data in timeFrames]
-                PlotType(filename, time_data, GroupBy=GroupBy, labels=labels)
-
-        elif isinstance(sender, (list, tuple, set)):
-            labels = [time_data[0] for time_data in timeFrames]
-            time_data = [time_data[1] for time_data in timeFrames]
-            PlotType(filename, time_data, GroupBy=GroupBy, labels=labels)
-
+        frames = GenerateTimeFrames(filename, sender)
+        if isinstance(sender, str) and sender != "all":
+            frames = [frames]
+        if not frames:
+            return []
+        labels = [label for label, _ in frames]
+        data = [values for _, values in frames]
     else:
-        time_data = SortByTime(ExtractDates(filename))
-        PlotType(filename, [time_data], GroupBy=GroupBy)
-
-
-# Example usage:
+        data = [SortByTime(ExtractDates(filename))]
+        labels = ["Messages"]
+    return PlotType(filename, data, GroupBy, labels, output_file=output_file, show=show)

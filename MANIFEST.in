@@ -1,0 +1,10 @@
+include requirements.txt requirements-lock.txt run.sh THIRD_PARTY_NOTICES.md
+include PERFORMANCE.md IMPROVEMENT_PLAN.md
+recursive-include native *.rs *.toml Cargo.lock LICENSE *.py *.md
+recursive-include pymessage/bin *
+recursive-include pymessage/data *
+recursive-include pymessage/web *
+recursive-include tests *.py *.json *.html *.plist
+recursive-include benchmarks *.py *.json *.md
+prune native/target
+global-exclude __pycache__ *.pyc

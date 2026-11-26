@@ -1,0 +1,290 @@
+{
+  "python": "3.10.11",
+  "platform": "macOS-14.7.4-arm64-arm-64bit",
+  "chats": 1,
+  "charts": "none",
+  "cases": [
+    {
+      "messages": 10000,
+      "source_bytes": 1368064,
+      "first": {
+        "wall_seconds": 1.6937,
+        "stage_seconds": {
+          "analysis_and_exports": 0.564716,
+          "decode": 0.520617,
+          "media": 0.006604,
+          "reconcile": 0.339258,
+          "relationships": 0.066865,
+          "render": 2e-06,
+          "report_index": 0.007469,
+          "snapshot": 0.007967
+        },
+        "sync": {
+          "absent": 0,
+          "added": 10000,
+          "changed": 0,
+          "decode_requested": 0,
+          "decoded": 10000,
+          "raw_records_changed": 20004,
+          "reconciliation": {
+            "archived_present_rows": 10000,
+            "source_message_rows": 10000
+          },
+          "snapshot_unchanged": false,
+          "source_id": "fe672f9b702200967b889ff1",
+          "unchanged": 0,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 0,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 10000
+      },
+      "unchanged": {
+        "wall_seconds": 0.0922,
+        "stage_seconds": {
+          "analysis_and_exports": 0.000312,
+          "render": 1e-06,
+          "report_index": 0.001452,
+          "snapshot": 0.00639
+        },
+        "sync": {
+          "absent": 0,
+          "added": 0,
+          "changed": 0,
+          "decoded": 0,
+          "raw_records_changed": 0,
+          "snapshot_unchanged": true,
+          "source_id": "fe672f9b702200967b889ff1",
+          "unchanged": 10000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 1,
+          "analyzed": 0,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 10000
+      },
+      "append": {
+        "wall_seconds": 0.8682,
+        "stage_seconds": {
+          "analysis_and_exports": 0.385542,
+          "decode": 0.00121,
+          "media": 0.00647,
+          "reconcile": 0.304021,
+          "relationships": 0.074482,
+          "render": 1e-06,
+          "report_index": 0.001556,
+          "snapshot": 0.006421
+        },
+        "sync": {
+          "absent": 0,
+          "added": 1,
+          "changed": 0,
+          "decode_requested": 0,
+          "decoded": 1,
+          "raw_records_changed": 2,
+          "reconciliation": {
+            "archived_present_rows": 10001,
+            "source_message_rows": 10001
+          },
+          "snapshot_unchanged": false,
+          "source_id": "fe672f9b702200967b889ff1",
+          "unchanged": 10000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 0,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 10001
+      },
+      "old_update": {
+        "wall_seconds": 0.8589,
+        "stage_seconds": {
+          "analysis_and_exports": 0.392551,
+          "decode": 0.000945,
+          "media": 0.006343,
+          "reconcile": 0.292678,
+          "relationships": 0.070045,
+          "render": 2e-06,
+          "report_index": 0.001507,
+          "snapshot": 0.006311
+        },
+        "sync": {
+          "absent": 0,
+          "added": 0,
+          "changed": 1,
+          "decode_requested": 0,
+          "decoded": 1,
+          "raw_records_changed": 1,
+          "reconciliation": {
+            "archived_present_rows": 10001,
+            "source_message_rows": 10001
+          },
+          "snapshot_unchanged": false,
+          "source_id": "fe672f9b702200967b889ff1",
+          "unchanged": 10000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 0,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 10001
+      },
+      "output_bytes": 25230091,
+      "child_peak_rss_mb": 41.27
+    },
+    {
+      "messages": 100000,
+      "source_bytes": 13811712,
+      "first": {
+        "wall_seconds": 16.0595,
+        "stage_seconds": {
+          "analysis_and_exports": 5.755397,
+          "decode": 5.280489,
+          "media": 0.082377,
+          "reconcile": 3.544413,
+          "relationships": 0.688698,
+          "render": 2e-06,
+          "report_index": 0.059255,
+          "snapshot": 0.058129
+        },
+        "sync": {
+          "absent": 0,
+          "added": 100000,
+          "changed": 0,
+          "decode_requested": 0,
+          "decoded": 100000,
+          "raw_records_changed": 200004,
+          "reconciliation": {
+            "archived_present_rows": 100000,
+            "source_message_rows": 100000
+          },
+          "snapshot_unchanged": false,
+          "source_id": "6b7a1c0f90db2bdde0aa8f51",
+          "unchanged": 0,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 0,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 100000
+      },
+      "unchanged": {
+        "wall_seconds": 0.1862,
+        "stage_seconds": {
+          "analysis_and_exports": 0.000357,
+          "render": 1e-06,
+          "report_index": 0.001684,
+          "snapshot": 0.059872
+        },
+        "sync": {
+          "absent": 0,
+          "added": 0,
+          "changed": 0,
+          "decoded": 0,
+          "raw_records_changed": 0,
+          "snapshot_unchanged": true,
+          "source_id": "6b7a1c0f90db2bdde0aa8f51",
+          "unchanged": 100000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 1,
+          "analyzed": 0,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 100000
+      },
+      "append": {
+        "wall_seconds": 8.2329,
+        "stage_seconds": {
+          "analysis_and_exports": 4.122838,
+          "decode": 0.001227,
+          "media": 0.08064,
+          "reconcile": 3.044796,
+          "relationships": 0.787883,
+          "render": 2e-06,
+          "report_index": 0.001626,
+          "snapshot": 0.059162
+        },
+        "sync": {
+          "absent": 0,
+          "added": 1,
+          "changed": 0,
+          "decode_requested": 0,
+          "decoded": 1,
+          "raw_records_changed": 2,
+          "reconciliation": {
+            "archived_present_rows": 100001,
+            "source_message_rows": 100001
+          },
+          "snapshot_unchanged": false,
+          "source_id": "6b7a1c0f90db2bdde0aa8f51",
+          "unchanged": 100000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 0,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 100001
+      },
+      "old_update": {
+        "wall_seconds": 8.4658,
+        "stage_seconds": {
+          "analysis_and_exports": 4.371218,
+          "decode": 0.003814,
+          "media": 0.085002,
+          "reconcile": 3.023244,
+          "relationships": 0.786107,
+          "render": 2e-06,
+          "report_index": 0.00161,
+          "snapshot": 0.057881
+        },
+        "sync": {
+          "absent": 0,
+          "added": 0,
+          "changed": 1,
+          "decode_requested": 0,
+          "decoded": 1,
+          "raw_records_changed": 1,
+          "reconciliation": {
+            "archived_present_rows": 100001,
+            "source_message_rows": 100001
+          },
+          "snapshot_unchanged": false,
+          "source_id": "6b7a1c0f90db2bdde0aa8f51",
+          "unchanged": 100000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 0,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 100001
+      },
+      "output_bytes": 256393281,
+      "child_peak_rss_mb": 48.27
+    }
+  ]
+}

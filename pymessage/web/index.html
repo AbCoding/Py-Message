@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" data-theme="paper">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light"><title>Py-Message</title>
+<script src="/explore.js"></script><link rel="stylesheet" href="/style.css"><script src="/semantic.js" defer></script><script src="/heart-media.js" defer></script><link rel="stylesheet" href="/explore.css"><script src="/app.js" defer></script>
+</head>
+<body>
+<header class="app-bar">
+  <div class="app-brand"><span class="brand-icon" aria-hidden="true"><i></i></span>Py-Message</div>
+  <nav id="pages" aria-label="Analysis pages">
+    <button data-page="overview" aria-current="page">Overview</button>
+    <button data-page="direct">Direct texts</button>
+    <button data-page="groups">Group chats</button>
+  </nav>
+  <span id="mode-badge" class="badge">LOCAL</span>
+  <button id="toggle-library" class="text-button" aria-expanded="false">Library</button>
+</header>
+<div class="app-shell">
+  <aside class="sidebar" aria-label="Archive library">
+    <div class="sidebar-heading"><h1 id="library-heading">Library</h1></div>
+    <button id="all-scope" class="scope-reset" hidden></button>
+    <label class="search"><span class="search-icon" aria-hidden="true"></span><input id="search" type="search" placeholder="Search conversations" aria-label="Search conversations" autocomplete="off"></label>
+    <p id="sidebar-status" class="sidebar-status" role="status" hidden></p>
+    <div class="list-label"><span id="library-label">CONVERSATIONS</span><span id="chat-count"></span></div>
+    <p id="people-hint" class="people-hint" hidden></p>
+    <div id="chat-list" class="chat-list" aria-label="Choose a conversation"></div>
+    <button id="more-chats" class="text-button" hidden>More conversations</button>
+    <label class="theme-choice" for="app-theme">Theme
+      <select id="app-theme"><option value="paper">Soft Paper</option><option value="studio">Data Studio</option></select>
+    </label>
+    <details class="manage-data"><summary>Manage data</summary><div class="contacts-control"><button id="match-contacts" class="text-button">Match contacts</button><span id="contacts-summary">Label numbers with names</span></div>
+    <footer class="sidebar-footer"><span class="local-dot"></span><span>Saved data</span><button id="sync" class="text-button" title="Check Messages for new data">Load new data</button></footer></details>
+  </aside>
+  <main class="workspace">
+    <div id="notice" class="notice" role="status" hidden></div>
+    <section id="welcome" class="welcome">
+      <h2>Load your conversations</h2>
+      <p>Explore the Messages history on this Mac.</p>
+      <button id="load" class="primary">Load conversations</button>
+    </section>
+    <section id="explorer" class="explorer" hidden>
+      <header class="explorer-heading">
+        <div><button id="explore-back" class="text-button" hidden>‹ Back</button>
+        <h2 id="explore-title">Overview</h2><p id="explore-scope" class="card-note"></p></div>
+        <button id="browse-target" class="outlined" hidden>View messages</button>
+      </header>
+      <div id="measure-tabs" class="measure-tabs" role="group" aria-label="Analysis category"></div>
+      <form id="explore-form" class="work-controls">
+        <div class="work-row">
+          <label id="language-label" hidden>Measure<select id="work-language"><option value="length">Words per text</option><option value="emoji">Emoji usage</option><option value="term">Word or emoji usage</option></select></label>
+          <label id="term-label" hidden>Word or emoji<input id="work-term" maxlength="80" placeholder="One word or emoji"></label>
+          <label id="direction-label">Count<select id="work-direction"></select></label>
+          <label>Group by<select id="work-group"><option value="month">Month</option><option value="week">Week</option><option value="day">Day</option></select></label>
+          <label id="author-label" hidden>Member<select id="work-author"></select></label>
+          <button id="work-apply" type="submit" class="primary">Run analysis</button>
+        </div>
+        <details id="work-options"><summary>Date range and options</summary><div class="work-row">
+          <label>From<input id="work-start" type="date"></label><label>Through<input id="work-end" type="date"></label>
+          <label id="gap-label" hidden>Maximum reply gap<select id="work-gap"><option>1</option><option>6</option><option>12</option><option selected>24</option><option>48</option></select>hours</label>
+          <span id="work-zone" class="card-note"></span>
+        </div></details>
+      </form>
+      <div id="work-output" aria-live="polite"></div>
+      <div id="related-tools" class="related-tools">
+        <button id="open-activity" class="outlined">People rankings</button>
+        <button id="open-semantic" class="outlined">Vocabulary details</button>
+        <button id="open-context" class="outlined">Word and emoji context</button>
+        <button id="open-report" class="outlined">Conversation statistics</button>
+      </div>
+      <details id="saved-tools"><summary>Saved views</summary>
+        <form id="save-view" class="work-row"><label>View name<input id="view-name" required maxlength="80"></label><button class="outlined">Save current view</button></form>
+        <div id="view-list"></div>
+      </details>
+    </section>
+    <section id="people-activity" class="people-activity" hidden>
+      <header class="activity-header"><button id="activity-back" class="icon-button back" aria-label="Back to previous view">‹</button><h2>People activity</h2></header>
+      <form id="activity-form" class="analysis-controls">
+        <div class="filter-row"><label>From<input id="activity-start" type="date"></label><label>Until (exclusive)<input id="activity-end" type="date"></label><label>Group by<select id="activity-group"><option value="month">Month</option><option value="week">Week</option><option value="day">Day</option></select></label></div>
+        <div class="filter-row activity-options"><label>Count<select id="activity-metric"><option value="total">Sent + received</option><option value="sent">Messages I sent</option><option value="received">Messages I received</option></select></label><label>Ranking<select id="activity-ranking-mode"><option value="period">Top each period</option><option value="overall">Top overall</option></select></label><label>People<select id="activity-top"><option value="1">Top 1</option><option value="5" selected>Top 5</option><option value="10">Top 10</option><option value="15">Top 15</option></select></label><button id="activity-run" type="submit" class="primary">Plot</button></div>
+        <p id="activity-timezone" class="card-note"></p>
+      </form>
+      <p id="activity-empty" class="empty-list">Choose a date range or leave it blank for all history, then select Plot.</p>
+      <div id="activity-results" hidden>
+        <div class="result-meta"><span id="activity-context"></span><button id="activity-download" class="text-button">Save counts ↓</button></div>
+        <section class="card"><div class="card-heading"><h3>Messages over time</h3><span id="activity-count"></span></div><div id="people-legend" class="people-legend"></div><div id="people-chart" class="people-chart"></div><label class="period-selector" for="activity-period">Period<input id="activity-period" type="range" min="0" max="0" value="0"></label><div id="activity-readout" class="activity-readout" aria-live="polite"></div><p id="activity-chart-note" class="card-note"></p></section>
+        <section class="card activity-ranking"><h3>Most messaged people</h3><p id="ranking-context" class="card-note"></p><div id="activity-ranking" class="reaction-table"></div></section>
+        <p id="activity-definition" class="coverage"></p>
+      </div>
+    </section>
+    <section id="semantic-view" class="people-activity" hidden>
+      <header class="activity-header"><button id="semantic-back" class="icon-button back" aria-label="Back to previous view">‹</button><h2>Your vocabulary</h2></header>
+      <p class="card-note">Your sent messages across linked direct conversations. All analysis stays on this computer.</p>
+      <form id="semantic-form" class="analysis-controls">
+        <div class="filter-row"><label>From<input id="semantic-start" type="date"></label><label>Until (exclusive)<input id="semantic-end" type="date"></label><label>Group by<select id="semantic-group"><option value="month">Month</option><option value="week">Week</option><option value="day">Day</option></select></label></div>
+        <div class="filter-row activity-options"><label>Other names to track<input id="semantic-names" type="text" placeholder="Taylor, Alex Smith"></label></div>
+        <details class="semantic-picker"><summary>Choose people <span id="semantic-selection-count">(everyone)</span></summary><p class="card-note">Leave empty for everyone, or select up to six people to compare their timelines.</p><label for="semantic-search">Find a person</label><input id="semantic-search" type="search" placeholder="Name or address" autocomplete="off"><div id="semantic-matches" class="semantic-matches"></div><div id="semantic-selected" class="semantic-selected"></div></details>
+        <button id="semantic-run" type="submit" class="primary">Analyze vocabulary</button>
+      </form>
+      <p id="semantic-empty" class="empty-list">Choose filters, then analyze. Nothing runs automatically when this view opens.</p>
+      <div id="semantic-results" hidden>
+        <div class="result-meta"><span id="semantic-meta"></span><button id="semantic-download" class="text-button">Save analysis ↓</button></div>
+        <div id="semantic-stats" class="stats"></div>
+        <section class="card"><h3>Frequent words</h3><div id="semantic-words" class="semantic-words"></div><p class="card-note">Select a word to analyze its context. Common English function words are hidden from word lists but kept in rate denominators and diversity samples.</p></section>
+        <section class="card"><div class="card-heading"><h3>Vocabulary over time</h3><select id="semantic-measure" aria-label="Vocabulary measure"><option value="words_per_message">Words per message</option><option value="diversity">Unique words per 100-word sample</option><option value="words">Word count</option></select></div><div id="semantic-trend"></div><p class="card-note">Diversity averages complete, non-overlapping 100-word samples. Periods with fewer than 100 words have no diversity score. Counts use lowercase words; URLs, email addresses, and numbers are excluded.</p></section>
+        <section class="card"><h3>Words by person</h3><div id="semantic-people" class="reaction-table"></div><p class="card-note">Distinctive words have a higher rate with this person than with the other people in this selection. At least three uses combined and 20 words on each side are required. Recipient mix can also change the overall trend.</p></section>
+        <section class="card"><div class="card-heading"><h3>Tone signals</h3><select id="semantic-tone" aria-label="Tone signal"></select></div><div id="semantic-tone-chart"></div><div id="semantic-tone-table" class="reaction-table"></div><p class="card-note">Percentage of text messages containing each cue. Categories overlap. These English word lists are indicators of wording, not emotion or personality; sarcasm, quotations, slang, and other languages may be missed. Positive/negative cues preceded within three words by a listed negation are skipped.</p><details><summary>Words counted</summary><div id="semantic-tone-method" class="card-note"></div></details></section>
+        <section class="card"><div class="card-heading"><h3>Name mentions</h3><select id="semantic-name" aria-label="Name to plot"></select></div><div id="semantic-name-chart"></div><div id="semantic-name-table" class="reaction-table"></div><p class="card-note">Literal, case-insensitive matches to saved contact names and names you enter; counted once per name per message. First names can match ordinary words or multiple contacts. A match does not establish who you meant, and it may be a greeting to the recipient. Full names take priority over overlapping first names.</p></section>
+
+        <p id="semantic-coverage" class="coverage"></p>
+      </div>
+    </section>
+    <section id="context-view" class="people-activity" hidden>
+      <header class="activity-header"><button id="context-back" class="icon-button back" aria-label="Back to previous view">‹</button><h2>Word context</h2></header>
+      <p class="card-note">Compare words, emoji, and their surrounding context across time and people. Sent messages in linked direct conversations only.</p>
+      <form id="context-form" class="analysis-controls">
+        <div class="filter-row context-input-row"><label>Words or emoji<input id="context-words" type="text" placeholder="love, 😂, ❤️" required maxlength="485" aria-describedby="context-word-help"></label><button id="context-emoji-button" type="button" class="emoji-picker-trigger" aria-haspopup="dialog" aria-controls="context-emoji-dialog">☺ Emoji</button></div>
+        <p id="context-word-help" class="card-note">Enter one to six words or emoji, separated by commas or spaces. Each selection is analyzed separately. Skin-tone variants stay distinct; ❤ and ❤️ match together.</p>
+        <div class="filter-row"><label>From<input id="context-start" type="date"></label><label>Until (exclusive)<input id="context-end" type="date"></label><label>Group by<select id="context-group"><option value="month">Month</option><option value="week">Week</option><option value="day">Day</option></select></label></div>
+        <details class="semantic-picker" open><summary>Filter by person <span id="context-selection-count">(everyone)</span></summary><p class="card-note">Leave empty for everyone, or select up to six people. Linked addresses are combined.</p><label for="context-search">Find a person</label><input id="context-search" type="search" placeholder="Name or address" autocomplete="off"><div id="context-matches" class="semantic-matches"></div><div id="context-selected" class="semantic-selected"></div></details>
+        <button id="context-run" type="submit" class="primary">Analyze words</button>
+      </form>
+      <p id="context-empty" class="empty-list">Choose words or emoji and optional people, then select Analyze words. Nothing runs when this view opens.</p>
+      <div id="context-results" hidden>
+        <div class="result-meta"><span id="context-meta"></span><button id="context-download" class="text-button">Save context ↓</button></div>
+        <section class="card"><h3>Usage over time</h3><div id="context-comparison-chart"></div><p class="card-note">Occurrences per 1,000 tokens in the selected sent messages. A token is one word or one complete emoji. Emoji-only messages count. Zero means the selection was not used; gaps mean no words or emoji were available.</p></section>
+        <section class="card"><nav id="context-tabs" class="context-tabs" aria-label="Word details"></nav><h3 id="context-detail-heading"></h3><p id="context-detail-note" class="card-note"></p><div id="context-person-chart"></div><div id="context-periods" class="reaction-table"></div><h4>Context by person</h4><div id="context-people" class="reaction-table"></div></section>
+        <p class="coverage">Context uses up to five word or emoji tokens before and after each selection within a sent message, excluding common English function words. Combined emoji (flags, skin tones, keycaps, and joined families) count as one token using bundled Unicode Emoji 17 definitions. Context change compares neighboring-word counts with the previous calendar period (0 = same distribution, 1 = no overlap); it requires five uses and some context on both sides. It measures changing associations, not a proven change in meaning. Weeks start Monday; boundary periods may be partial. URLs, email addresses, numeric tokens, incoming messages, group messages, reactions, and duplicate GUIDs are excluded. Unfiltered person tables show up to 30 people per selection; filter by person to inspect others.</p>
+        <p id="context-coverage" class="coverage"></p>
+      </div>
+    </section>
+    <section id="conversation" class="conversation" hidden>
+      <header class="conversation-header">
+        <button id="back" class="icon-button back" aria-label="Back to previous view">‹</button>
+        <div id="header-avatar" class="avatar"></div><div class="conversation-title"><h2 id="chat-title"></h2><p id="chat-detail"></p></div>
+        <span class="readonly"><span class="local-dot"></span>Archive view</span>
+      </header>
+      <nav class="tabs" aria-label="Conversation view"><button id="messages-tab" class="tab active" aria-pressed="true">Conversation</button><button id="analysis-tab" class="tab" aria-pressed="false">Analysis</button></nav>
+      <section id="person-controls" class="person-controls" aria-label="Person and linked conversations" hidden>
+        <div class="person-toolbar"><label>Messages<select id="person-scope"><option value="direct">Direct conversations</option><option value="groups">Their group messages</option></select></label><button id="link-person" class="text-button">Link another address</button><button id="unlink-person" class="text-button" hidden>Undo manual links</button></div>
+        <p id="person-note" class="card-note"></p>
+        <details><summary>Addresses and conversations</summary><p id="person-addresses"></p><div id="person-threads"></div></details>
+      </section>
+      <div id="messages-view" class="messages-view">
+        <div id="message-scroll" class="message-scroll"><button id="older" class="text-button" hidden>Load earlier messages ↑</button><div id="messages"></div></div>
+        <div class="conversation-bottom"><button id="discover" class="text-button">View analysis</button></div>
+      </div>
+      <div id="analysis-view" class="analysis-view" hidden>
+        <div class="insights-heading"><h2 id="report-heading">Analysis</h2></div>
+        <label id="reaction-view-label" class="reaction-focus" hidden>Show
+          <select id="reaction-view"><option value="totals">Reactions received</option><option value="leaderboard">Most-hearted messages</option><option value="matrix">Who hearts whom</option><option value="timeline">Hearts over time</option><option value="buckets">Messages by heart count</option></select>
+        </label>
+        <form id="analysis-form" class="analysis-controls">
+          <div class="filter-row"><label>From<input id="start-date" type="date"></label><label>Until (exclusive)<input id="end-date" type="date"></label><label>Group by<select id="group-by"><option value="week">Week</option><option value="day">Day</option><option value="month">Month</option><option value="day_of_week">Day of week</option><option value="time_of_day">Hour of day</option></select></label><button id="run-analysis" class="primary" type="submit">Run analysis</button></div>
+          <div class="filter-options"><label><input id="common-words" type="checkbox" checked> Skip common words</label><label><input id="by-sender" type="checkbox" checked> Compare senders</label><span id="timezone-label"></span></div>
+        </form>
+        <div id="analysis-empty" class="analysis-empty"><p>Choose your filters, then run analysis.</p></div>
+        <div id="results" hidden>
+          <div class="result-meta"><span id="result-context"></span><button id="download" class="text-button">Save statistics ↓</button></div>
+          <div id="stats" class="stats"></div>
+          <section class="card reactions-card"><div class="card-heading"><h3>Reactions received</h3><span id="reaction-total"></span></div><div id="reaction-table" class="reaction-table" tabindex="0" role="region" aria-label="Reaction counts by message author"></div><p id="reaction-note" class="card-note"></p></section>
+          <section id="hearts-section" class="hearts-section" hidden>
+            <section class="card" data-heart-view="timeline"><div class="card-heading"><h3>Hearts over time</h3><label>Show<select id="heart-chart-mode"><option value="total">Total hearts</option><option value="people">By message author</option></select></label></div><p id="heart-summary" class="card-note"></p><div id="heart-history"></div><p id="heart-history-note" class="card-note"></p></section>
+            <section class="card" data-heart-view="buckets"><div class="card-heading"><h3>Messages by heart count</h3><label>Messages with<select id="heart-exact" aria-label="Exact number of hearts per message"></select></label></div><div id="heart-buckets-chart"></div><div id="heart-buckets-table" class="reaction-table" tabindex="0" role="region" aria-label="Messages by author and exact heart count"></div><p class="card-note">Each message belongs to one column: a message with 3 hearts counts once under “3 hearts,” not under 1 or 2. Messages with no hearts are excluded.</p></section>
+            <section class="card" data-heart-view="leaderboard"><div class="card-heading"><h3>Most-hearted messages</h3><span id="heart-top-count"></span></div><ol id="heart-top-messages" class="heart-top-messages"></ol><p id="heart-top-empty" class="card-note" hidden>No messages with hearts in this date range.</p></section>
+            <section class="card" data-heart-view="matrix"><div class="card-heading"><h3>Who hearts whose messages</h3></div><p class="card-note">Rows: person giving hearts. Columns: message author. Each cell is the percentage of the author’s messages hearted by that person in the selected date range. Messages with no hearts count too; self-reactions are excluded.</p><div id="heart-matrix" class="reaction-table heart-matrix" tabindex="0" role="region" aria-label="Percentage of each author's messages hearted by each person"></div><div class="heart-matrix-legend" aria-hidden="true"><span>0%</span><i></i><span>100%</span></div><p class="card-note"><span id="heart-cell-count" aria-live="polite">Select a cell for counts.</span> — means the same person or no messages from that author.</p></section>
+            <p id="heart-definition" class="coverage"></p>
+          </section>
+          <section class="card activity-card"><div class="card-heading"><h3>Message count history</h3><span id="chart-caption"></span></div><div id="legend" class="legend"></div><div id="activity-chart" class="activity-chart"></div><p id="activity-note" class="card-note"></p></section>
+          <div class="insight-grid"><section class="card words-card"><div class="card-heading"><h3>Word frequency</h3></div><div id="word-cloud" class="word-cloud"></div><div id="top-words" class="top-words"></div></section><section class="card balance-card"><h3>Messages by sender</h3><div id="sender-bars"></div><div class="response"><h4>Average response time</h4><strong id="response-value"></strong><p id="response-note"></p></div></section></div>
+          <p id="coverage" class="coverage"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<dialog id="inspect-dialog" aria-labelledby="inspect-title">
+  <header><h2 id="inspect-title">Messages</h2><button class="outlined" id="inspect-close">Close</button></header>
+  <div id="inspect-list"></div><button class="outlined" id="inspect-more" hidden>More messages</button>
+</dialog>
+<dialog id="context-emoji-dialog" class="emoji-picker-dialog" aria-labelledby="context-emoji-title">
+  <div class="emoji-picker-header"><h2 id="context-emoji-title">Choose emoji</h2><button id="context-emoji-close" type="button" class="text-button">Done</button></div>
+  <p class="card-note">Choose up to six words and emoji total. Select an emoji again to remove it.</p>
+  <div class="emoji-picker-filters"><label>Search<input id="context-emoji-search" type="search" placeholder="Search emoji, e.g. heart" autocomplete="off"></label><label>Category<select id="context-emoji-group"><option value="">All categories</option></select></label></div>
+  <p id="context-emoji-selection" class="emoji-picker-selection" aria-live="polite"></p>
+  <p id="context-emoji-status" class="card-note" role="status"></p>
+  <div id="context-emoji-grid" class="emoji-picker-grid" aria-label="Emoji choices"></div>
+  <button id="context-emoji-more" type="button" class="text-button" hidden>More emoji</button>
+</dialog>
+<dialog id="link-dialog" aria-labelledby="link-title">
+  <form id="link-form">
+    <h2 id="link-title">Link addresses</h2><p id="link-description"></p>
+    <label for="link-search">Find a person or address</label><input id="link-search" type="search" autocomplete="off">
+    <label for="link-target">Link with</label><select id="link-target" size="7" required></select>
+    <p id="link-error" role="alert" hidden></p>
+    <p class="card-note">Only link entries that belong to the same person. You can undo manual links later.</p>
+    <div class="dialog-actions"><button id="link-cancel" type="button" class="text-button">Cancel</button><button id="link-submit" type="submit" class="primary">Link addresses</button></div>
+  </form>
+</dialog>
+</body>
+</html>

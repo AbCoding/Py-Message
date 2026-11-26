@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pymessage-analysis"
+version = "0.3.0"
+description = "Local, incremental iMessage archive and analysis"
+requires-python = ">=3.10"
+readme = "README.md"
+dependencies = ["beautifulsoup4>=4.12,<5", "pandas>=2.2,<3", "matplotlib>=3.8,<4", "numpy>=1.26,<3", "wordcloud>=1.9,<2", "tzdata>=2024.1"]
+
+[project.scripts]
+pymessage = "pymessage.cli:main"
+
+[tool.setuptools]
+packages = ["pymessage"]
+py-modules = ["main", "MessageExporter", "MessageFileToDatabase", "MessagesOverTime", "FrequencyTableGenerator", "GenerateWordCloud", "TextingPatterns"]
+include-package-data = false
+
+[tool.setuptools.package-data]
+pymessage = ["bin/*", "data/*.txt", "data/native-licenses/*", "web/*"]

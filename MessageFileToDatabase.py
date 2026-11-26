@@ -1,98 +1,91 @@
+"""Convert imessage-exporter HTML (legacy and current) to analysis CSVs."""
+
 from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
-import re
 import csv
+import re
+
+from bs4 import BeautifulSoup
+
+
+def _own_elements(message, selector):
+    # Never attribute a nested reply's timestamp, sender or text to its parent.
+    return [
+        element for element in message.select(selector)
+        if element.find_parent("div", class_="message") is message
+    ]
+
 
 def ExtractAllMessages(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        html_doc = file.read()
-
-    # Parse the HTML document
-    soup = BeautifulSoup(html_doc, 'html.parser')
-
-    # Extract timestamps
-    timestamps = soup.find_all('div', class_='message')
-    for i,timestamp in enumerate(timestamps):
-        timestamps[i] = timestamp.extract()
-    return timestamps
+    with open(file_path, "r", encoding="utf-8") as source:
+        soup = BeautifulSoup(source, "html.parser")
+    messages = []
+    seen = set()
+    for message in soup.select("div.message"):
+        # Current exports expose the GUID in sms:// links for both inline
+        # replies and their duplicate renderings in the main timeline.
+        timestamps = _own_elements(message, "span.timestamp")
+        link = timestamps[0].find("a", href=re.compile(r"message-guid=")) if timestamps else None
+        identity = link.get("href") if link else message.get("id")
+        if identity:
+            identity = identity.removeprefix("r-")
+            if identity in seen:
+                continue
+            seen.add(identity)
+        messages.append(message)
+    return messages
 
 
 def TimeStamp_to_DateTime(timestamp):
-    date_format = "%b %d, %Y %I:%M:%S %p"
-
-    date_object = datetime.strptime(timestamp, date_format)
-
-    return date_object
+    normalized = " ".join(timestamp.split())
+    return datetime.strptime(normalized, "%b %d, %Y %I:%M:%S %p")
 
 
 def extract_timedelta_from_ReadTime(text):
-    HourRegEx = r'(\d+)\shours'
-    MinuteRegEx = r'(?:\d+\shours,\s)?(\d+)\sminutes'
-    SecondRegEx = r'(?:\d+\sminutes,\s)?(\d+)\sseconds\)'
-
-    hours = 0
-    minutes = 0
-    seconds = 0
-
-    match = re.search(HourRegEx, text)
-    if match is not None:
-        hours = int(match.group(1))
-
-    match = re.search(MinuteRegEx, text)
-    if match is not None:
-        minutes = int(match.group(1))
-
-    match = re.search(SecondRegEx, text)
-    if match is not None:
-        seconds = int(match.group(1))
-
-    return timedelta(hours=hours, minutes=minutes, seconds=seconds)
+    units = {"day": 86400, "hour": 3600, "minute": 60, "second": 1}
+    seconds = sum(
+        int(amount) * units[unit]
+        for amount, unit in re.findall(r"(\d+)\s+(day|hour|minute|second)s?\b", text)
+    )
+    return timedelta(seconds=seconds)
 
 
 def MessageToDataEntry(message):
-    #String
-
-    MessageSender= str(message.find('span', class_='sender').getText())
-
-
-    #Datetime Value
-    MessageTimeString = str(message.find('span', class_='timestamp').getText())
-
-    MessageTimeStamp = TimeStamp_to_DateTime(MessageTimeString.split('(')[0].strip())
-
-
-    #Time value
-    if len(MessageTimeString.split('('))>1:
-        ReadTime=extract_timedelta_from_ReadTime(MessageTimeString.split('(')[1].strip())
-    else:
-        ReadTime=None
-
-
-    #String
-
-    MessageContent= message.find('span', class_='bubble')
-    if MessageContent:
-        MessageContent=str(MessageContent.getText())
-
+    senders = _own_elements(message, "span.sender")
+    timestamps = _own_elements(message, "span.timestamp")
+    if not senders or not timestamps:
+        raise ValueError("Message is missing its sender or timestamp; unsupported HTML export.")
+    timestamp_text = timestamps[0].get_text(" ", strip=True)
+    date_text = timestamp_text.split("(", 1)[0].strip()
+    receipt = re.search(r"\(Read .*? after (.*?)\)", timestamp_text)
+    parts = []
+    for bubble in _own_elements(message, "span.bubble, span.emoji, div.edited"):
+        if bubble.find_parent(class_=["tapbacks", "translated", "edited"]):
+            continue
+        if "edited" in bubble.get("class", []):
+            cells = bubble.select("tfoot tr:last-child td:last-child") or bubble.select("tr:last-child td:last-child")
+            text = cells[-1].get_text(" ", strip=True) if cells else ""
+        else:
+            for line_break in bubble.find_all("br"):
+                line_break.replace_with("\n")
+            text = bubble.get_text("", strip=False).strip()
+        if text:
+            parts.append(text)
     return {
-        'Sender': MessageSender,
-        'Timestamp': MessageTimeStamp,
-        'ReadTime': ReadTime,
-        'Content': MessageContent
+        "Sender": senders[0].get_text(strip=True),
+        "Timestamp": TimeStamp_to_DateTime(date_text),
+        "ReadTime": extract_timedelta_from_ReadTime(receipt.group(1)) if receipt else None,
+        "Content": "\n".join(parts) or None,
     }
 
 
-#Database Structure:
-
-#Message Sender(str)| Message timeStamp(datetime)|How Long To Read(deltatime)| Message Content(str)
-
 def WriteToCSV(fileName, output_file):
     messages = ExtractAllMessages(fileName)
-    with open(output_file, 'w', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=['Sender', 'Timestamp', 'ReadTime', 'Content'])
+    with open(output_file, "w", newline="", encoding="utf-8") as destination:
+        writer = csv.DictWriter(destination, fieldnames=["Sender", "Timestamp", "ReadTime", "Content"])
         writer.writeheader()
-        for message in messages:
-            writer.writerow(MessageToDataEntry(message))
-
-
-
+        for index, message in enumerate(messages, start=1):
+            try:
+                writer.writerow(MessageToDataEntry(message))
+            except ValueError as error:
+                raise ValueError(f"{fileName}, message {index}: {error}") from error
+    return len(messages)

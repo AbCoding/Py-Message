@@ -1,0 +1,77 @@
+{
+  "python": "3.10.11",
+  "platform": "macOS-14.7.4-arm64-arm-64bit",
+  "chats": 1,
+  "charts": "none",
+  "cases": [
+    {
+      "messages": 1000000,
+      "source_bytes": 138448896,
+      "first": {
+        "wall_seconds": 191.5317,
+        "stage_seconds": {
+          "analysis_and_exports": 72.355447,
+          "decode": 56.532785,
+          "media": 2.687676,
+          "reconcile": 38.491231,
+          "relationships": 9.550351,
+          "render": 2.4e-05,
+          "report_index": 0.615096,
+          "snapshot": 0.681994
+        },
+        "sync": {
+          "absent": 0,
+          "added": 1000000,
+          "changed": 0,
+          "decode_requested": 0,
+          "decoded": 1000000,
+          "raw_records_changed": 2000004,
+          "reconciliation": {
+            "archived_present_rows": 1000000,
+            "source_message_rows": 1000000
+          },
+          "snapshot_unchanged": false,
+          "source_id": "0bb27b13047355ee4915035b",
+          "unchanged": 0,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 0,
+          "analyzed": 1,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 1000000
+      },
+      "unchanged": {
+        "wall_seconds": 1.8972,
+        "stage_seconds": {
+          "analysis_and_exports": 0.000497,
+          "render": 1e-06,
+          "report_index": 0.001854,
+          "snapshot": 0.600308
+        },
+        "sync": {
+          "absent": 0,
+          "added": 0,
+          "changed": 0,
+          "decoded": 0,
+          "raw_records_changed": 0,
+          "snapshot_unchanged": true,
+          "source_id": "0bb27b13047355ee4915035b",
+          "unchanged": 1000000,
+          "unsupported": 0
+        },
+        "cache": {
+          "analysis_cached": 1,
+          "analyzed": 0,
+          "render_cached": 0,
+          "rendered": 0
+        },
+        "total_messages": 1000000
+      },
+      "output_bytes": 2596367343,
+      "child_peak_rss_mb": 38.42
+    }
+  ]
+}
