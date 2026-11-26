@@ -197,8 +197,8 @@ class PipelineTests(unittest.TestCase):
             source.joinpath('broken.html').write_text('<div class="message">missing metadata</div>')
             status = main.main(['--html-dir', str(source), '--output', str(Path(temp) / 'results')])
             self.assertEqual(status, 2)  # Quarantined record; original HTML retained.
-            summaries = list((Path(temp) / 'results').rglob('summary.json'))
-            self.assertEqual(len(json.loads(summaries[0].read_text())['errors']), 1)
+            manifest = json.loads((Path(temp) / 'results' / 'latest-run.json').read_text())
+            self.assertEqual(len(manifest['errors']), 1)
 
     def test_blacklist_filters_without_a_dictionary(self):
         import FrequencyTableGenerator
